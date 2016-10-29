@@ -1,11 +1,11 @@
-FROM alpine:3.4
+FROM alpine:edge
 
 RUN apk add --update curl wget git mysql mysql-client \
   bash nginx ca-certificates \
-  php-fpm php-json php-zlib php-xml php-pdo php-phar php-openssl \
-  php-pdo_mysql php-mysqli \
-  php-gd php-iconv php-mcrypt \
-  php-curl php-openssl php-json php-dom php-ctype && \
+  php5-fpm php5-json php5-zlib php5-xml php5-pdo php5-phar php5-openssl \
+  php5-pdo_mysql php5-mysqli \
+  php5-gd php5-iconv php5-mcrypt \
+  php5-curl php5-openssl php5-json php5-dom php5-ctype && \
   apk add -u musl && \
   mkdir -p /var/lib/mysql && \
   mkdir -p /etc/mysql/conf.d && \
@@ -23,14 +23,16 @@ ADD files/run-server.sh /
 RUN chmod +x /run-server.sh
 
 # Install app
-RUN rm -rf /data/htdocs/*
-ADD src/ /data/htdocs
-ADD web/ /data/htdocs
+RUN mkdir -p /data/htdocs/web/ && mkdir -p /data/htdocs/src/
+ADD composer.json /data/htdocs/
+ADD src/ /data/htdocs/src/
+ADD web/ /data/htdocs/web/
 RUN  cd /data/htdocs && /usr/bin/composer install
 
 EXPOSE 80
 EXPOSE 3306
 
 WORKDIR /data/htdocs/
-VOLUME ["/data/htdocs", "/data/logs", "/var/lib/mysql", "/etc/mysql/conf.d/"]
-CMD ["/run-server.sh"]
+#VOLUME ["/data/htdocs", "/data/logs", "/var/lib/mysql", "/etc/mysql/conf.d/"]
+#CMD ["/run-server.sh"]
+CMD ["bash"]

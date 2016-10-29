@@ -14,6 +14,11 @@ fi
 mysqld --skip-grant-tables &
 
 # init app db
+echo "Waitig for MySQL to start..."
+until mysqladmin ping &>/dev/null; do
+  echo -n "."; sleep 0.2
+done
+
 mysql -u $MYSQL_USERNAME -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DB_NAME};"
 mysql -u $MYSQL_USERNAME -p$MYSQL_PASSWORD $MYSQL_DB_NAME < /tmp/db_init.sql
 
