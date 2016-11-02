@@ -11,7 +11,6 @@ RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
 
 # Install app
-RUN rm -rf /var/www/*
 ADD . /var/www
 RUN  cd /var/www && /usr/bin/composer install
 
@@ -27,7 +26,7 @@ ENV MYSQL_USERNAME root
 ENV MYSQL_PASSWORD root
 ENV MYSQL_HOSTNAME localhost
 
-EXPOSE 3306
 EXPOSE 80
+EXPOSE 3306
 
 CMD ["/var/www/init.sh"]
